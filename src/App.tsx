@@ -8,23 +8,25 @@ type Tab = "start" | "train";
 export default function App() {
   const liga = useLiga();
   const [tab, setTab] = useState<Tab>("start");
-  const [toast, setToast] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ msg: string; big?: string; shown: boolean } | null>(null);
   const toastTimer = useRef<number | undefined>(undefined);
   const today = new Date();
 
-  const showToast = (msg: string) => {
-    setToast(msg);
+  const showToast = (msg: string, big?: string) => {
+    setToast({ msg, big, shown: true });
     window.clearTimeout(toastTimer.current);
-    toastTimer.current = window.setTimeout(() => setToast(null), 2200);
+    toastTimer.current = window.setTimeout(() => setToast((t) => t && { ...t, shown: false }), 2200);
   };
   useEffect(() => () => window.clearTimeout(toastTimer.current), []);
 
   return (
     <>
       <div className="wrap">
-        <header>
-          <div className="eyebrow">Trainings-Spiel</div>
-          <h1>Nasufs Wochen-Liga</h1>
+        <header className="title">
+          <span className="eyebrow">Trainings-Spiel</span>
+          <h1>
+            Wochen<span>-</span>Liga
+          </h1>
         </header>
         {!liga.loaded ? null : tab === "start" ? (
           <StartScreen liga={liga} today={today} />
@@ -35,15 +37,16 @@ export default function App() {
 
       <nav className="tabbar" aria-label="Navigation">
         <button type="button" aria-current={tab === "start" ? "page" : undefined} onClick={() => setTab("start")}>
-          <span aria-hidden="true">🏆</span>Start
+          <span>Start</span>
         </button>
         <button type="button" aria-current={tab === "train" ? "page" : undefined} onClick={() => setTab("train")}>
-          <span aria-hidden="true">＋</span>Eintragen
+          <span>Eintragen</span>
         </button>
       </nav>
 
-      <div className={"toast" + (toast ? " show" : "")} role="status">
-        {toast}
+      <div className={"toast" + (toast?.shown ? " show" : "") + (toast?.big ? " splash" : "")} role="status">
+        {toast?.big && <b key={toast.msg + toast.big}>{toast.big}</b>}
+        {toast?.msg}
       </div>
     </>
   );

@@ -9,7 +9,8 @@ import type { Look } from "../lib/types";
 const AURA = [null, null, "#2bb5c9", "#ff7a1a", "#ff3d2e", "#f5c542"];
 const CX = 120;
 
-export function Avatar({ level, look }: { level: number; look: Look }) {
+/** `bust`: nur Kopf und Schultern, für die Porträt-Kacheln der Formen-Auswahl. */
+export function Avatar({ level, look, bust = false }: { level: number; look: Look; bust?: boolean }) {
   const L = Math.min(level, 20);
   const s = stageOf(level);
   const cx = CX;
@@ -27,7 +28,13 @@ export function Avatar({ level, look }: { level: number; look: Look }) {
   const eye = s >= 4 ? aura! : "#1a1a1a";
 
   return (
-    <svg viewBox="0 0 240 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={`Charakter Level ${level}`}>
+    <svg
+      viewBox={bust ? "40 0 160 160" : "0 0 240 300"}
+      xmlns="http://www.w3.org/2000/svg"
+      role={bust ? undefined : "img"}
+      aria-hidden={bust || undefined}
+      aria-label={bust ? undefined : `Charakter Level ${level}`}
+    >
       {aura && (
         <g className="aura">
           <path d="M120 4 C152 40 204 62 198 140 C194 200 216 232 192 296 L48 296 C24 232 46 200 42 140 C36 62 88 40 120 4Z" fill={aura} opacity={0.1 + 0.05 * s} />

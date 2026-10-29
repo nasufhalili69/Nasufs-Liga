@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ExerciseIcon } from "../components/ExerciseIcon";
 import { DAYS, isoWeek, weekDates, ymd } from "../lib/dates";
 import { addCustomExercise, addEntry, newId } from "../lib/db";
 import { BUILTIN, CATS, ruleText, scoreWeek } from "../lib/rules";
@@ -9,7 +10,7 @@ type Liga = ReturnType<typeof useLiga>;
 
 const NEW = "__new";
 
-export function TrainScreen({ liga, today, onToast }: { liga: Liga; today: Date; onToast: (msg: string) => void }) {
+export function TrainScreen({ liga, today, onToast }: { liga: Liga; today: Date; onToast: (msg: string, big?: string) => void }) {
   const [selEx, setSelEx] = useState("");
   const [creating, setCreating] = useState(false);
   const [day, setDay] = useState(ymd(today));
@@ -40,7 +41,7 @@ export function TrainScreen({ liga, today, onToast }: { liga: Liga; today: Date;
     await addEntry(weekKey, pending);
     setAmount("");
     setKm("");
-    onToast(`${pending.name} eingetragen · +${gain} XP`);
+    onToast(`${pending.name} eingetragen`, `+${gain} XP`);
   };
 
   const onSelect = (v: string) => {
@@ -55,32 +56,36 @@ export function TrainScreen({ liga, today, onToast }: { liga: Liga; today: Date;
   const unitLabel = !ex ? "Menge" : ex.unit === "min" ? "Minuten" : ex.unit === "Sek." ? "Sekunden" : "Wiederholungen";
   const placeholder = !ex ? "" : ex.unit === "Wdh." ? "z. B. 20" : "z. B. 45";
 
+  const tiles = [...BUILTIN.map((b) => ({ id: b.id, name: b.name, cat: b.cat, custom: false })), ...liga.custom];
+
   return (
-    <section className="card" aria-label="Training eintragen">
-      <h2>Training eintragen</h2>
-      <div className="field full">
-        <label htmlFor="exSelect">Übung</label>
-        <select id="exSelect" value={creating ? NEW : selEx} onChange={(e) => onSelect(e.target.value)}>
-          <option value="">Übung wählen …</option>
-          <optgroup label="Standard">
-            {BUILTIN.map((b) => (
-              <option key={b.id} value={b.id}>
-                {b.name}
-              </option>
-            ))}
-          </optgroup>
-          {liga.custom.length > 0 && (
-            <optgroup label="Eigene Übungen">
-              {liga.custom.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </optgroup>
-          )}
-          <option value={NEW}>+ Neue Übung hinzufügen …</option>
-        </select>
-      </div>
+    <>
+      <section className="select" aria-label="Training wählen">
+        <h2 className="section-title">
+          Training wählen <small>{ex ? ex.catName : "Übung antippen"}</small>
+        </h2>
+        <div className="ex-grid" role="radiogroup" aria-label="Übung">
+          {tiles.map((t) => {
+            const sel = !creating && t.id === selEx;
+            return (
+              <button key={t.id} type="button" role="radio" aria-checked={sel} className={"extile cat-" + t.cat + (sel ? " sel" : "")} onClick={() => onSelect(t.id)}>
+                <span className="ex-icon">
+                  <ExerciseIcon id={t.id} cat={t.cat} />
+                </span>
+                <span className="ex-name">{t.name}</span>
+                {t.custom && <span className="ex-tag">eigene</span>}
+                {sel && <span className="cursor">P1</span>}
+              </button>
+            );
+          })}
+          <button type="button" role="radio" aria-checked={creating} className={"extile new" + (creating ? " sel" : "")} onClick={() => onSelect(NEW)}>
+            <span className="ex-icon">
+              <ExerciseIcon id={NEW} />
+            </span>
+            <span className="ex-name">Neue Übung</span>
+          </button>
+        </div>
+      </section>
 
       {creating ? (
         <NewExercise
@@ -92,16 +97,27 @@ export function TrainScreen({ liga, today, onToast }: { liga: Liga; today: Date;
             onToast(msg);
           }}
         />
+      ) : !ex ? (
+        <section className="panel empty-panel">Wähl oben dein Training, dann Tag und Menge.</section>
       ) : (
-        <>
+        <section className="panel loadout" aria-label="Training eintragen">
+          <div className="loadout-head">
+            <span className="ex-icon big">
+              <ExerciseIcon id={ex.id} cat={ex.cat} />
+            </span>
+            <div>
+              <div className="lname">{ex.name}</div>
+              <div className="lrule">{ruleText(ex)}</div>
+            </div>
+          </div>
+
           <div className="daypick" role="group" aria-label="Tag">
             {dates.map((d, i) => {
               const k = ymd(d);
               return (
                 <button key={k} type="button" aria-pressed={k === day} disabled={d > today && k !== ymd(today)} onClick={() => setDay(k)}>
-                  {DAYS[i]}
-                  <br />
-                  <span className="num daynum">{d.getDate()}.</span>
+                  <b>{DAYS[i]}</b>
+                  <span className="num">{d.getDate()}.</span>
                 </button>
               );
             })}
@@ -118,25 +134,17 @@ export function TrainScreen({ liga, today, onToast }: { liga: Liga; today: Date;
               </div>
             )}
           </div>
-          <div className="addrow">
-            <div className="preview" aria-live="polite">
-              {!ex ? (
-                "Wähl eine Übung"
-              ) : pending ? (
-                <>
-                  bringt <b className="num">+{gain}</b> XP
-                </>
-              ) : (
-                <span className="small">{ruleText(ex)}</span>
-              )}
+          <div className="confirm">
+            <div className={"gain" + (pending ? "" : " idle")} aria-live="polite">
+              <span className="num">+{gain}</span> XP
             </div>
-            <button type="button" className="primary" disabled={!pending} onClick={submit}>
-              Eintragen
+            <button type="button" className="go" disabled={!pending} onClick={submit}>
+              <span>Eintragen</span>
             </button>
           </div>
-        </>
+        </section>
       )}
-    </section>
+    </>
   );
 }
 
@@ -154,8 +162,8 @@ function NewExercise({ existing, onCancel, onCreated }: { existing: string[]; on
   };
 
   return (
-    <div className="newex">
-      <h3>Neue Übung anlegen</h3>
+    <section className="panel newex">
+      <h2 className="section-title">Neue Übung anlegen</h2>
       <div className="fields">
         <div className="field">
           <label htmlFor="newName">Name</label>
@@ -191,7 +199,7 @@ function NewExercise({ existing, onCancel, onCreated }: { existing: string[]; on
           Übung anlegen
         </button>
       </div>
-    </div>
+    </section>
   );
 }
 
