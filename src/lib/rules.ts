@@ -129,3 +129,53 @@ export const FORMS = [
 ];
 
 export const stageOf = (level: number) => FORMS.reduce((s, f, i) => (level >= f.lv ? i : s), 0);
+
+/* Auswertungen für die Übersicht */
+
+export const FX_NAMES = ["Ausdauer & Herz", "Muskelmasse", "Aussehen", "Gesundheit"];
+const FX_FULL = 12; // ab dieser Summe gilt ein Bereich als voll abgedeckt
+
+/** Wirkung der Woche in Prozent (0–100) je Bereich. Wiederholungs-Übungen zählen einmal pro Tag. */
+export function weekEffect(entries: Entry[], ex: Record<string, ResolvedExercise>): number[] {
+  const tot = [0, 0, 0, 0];
+  const seen = new Set<string>();
+  for (const e of entries) {
+    const r = ex[e.ex];
+    if (!r) continue;
+    const k = r.kind === "reps" ? e.day + "|" + e.ex : e.id;
+    if (seen.has(k)) continue;
+    seen.add(k);
+    r.fx.forEach((v, i) => (tot[i] += v));
+  }
+  return tot.map((v) => Math.min(100, Math.round((v / FX_FULL) * 100)));
+}
+
+export type XpGroup = "ausdauer" | "kraft" | "rumpf" | "bonus";
+export const XP_GROUPS: { key: XpGroup; name: string }[] = [
+  { key: "ausdauer", name: "Ausdauer & Spiel" },
+  { key: "kraft", name: "Kraft" },
+  { key: "rumpf", name: "Rumpf & Mobilität" },
+  { key: "bonus", name: "Tage-Bonus" },
+];
+
+const GROUP_OF: Record<Category, XpGroup> = {
+  spiel: "ausdauer",
+  cardio: "ausdauer",
+  kraftOb: "kraft",
+  kraftUn: "kraft",
+  schwer: "kraft",
+  rumpf: "rumpf",
+  mobil: "rumpf",
+};
+
+/** Wochen-XP aufgeteilt in vier Gruppen von Arten plus Tage-Bonus. */
+export function xpByGroup(entries: Entry[], ex: Record<string, ResolvedExercise>): Record<XpGroup, number> {
+  const s = scoreWeek(entries, ex);
+  const out: Record<XpGroup, number> = { ausdauer: 0, kraft: 0, rumpf: 0, bonus: s.bonus };
+  for (const e of entries) {
+    const r = ex[e.ex];
+    if (!r) continue;
+    out[GROUP_OF[r.cat]] += s.per.get(e.id) ?? 0;
+  }
+  return out;
+}

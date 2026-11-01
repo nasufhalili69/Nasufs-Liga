@@ -49,3 +49,10 @@ export async function addCustomExercise(name: string, cat: Exercise["cat"]): Pro
 export async function saveLook(look: Look) {
   await db.settings.put({ key: "look", value: look });
 }
+
+export async function deleteEntry(weekKey: string, entryId: string) {
+  await db.transaction("rw", db.weeks, async () => {
+    const w = await db.weeks.get(weekKey);
+    if (w) await db.weeks.put({ key: weekKey, entries: w.entries.filter((e) => e.id !== entryId) });
+  });
+}
