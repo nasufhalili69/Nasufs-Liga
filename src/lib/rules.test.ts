@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { isoWeek, weekDates, ymd } from "./dates";
-import { levelOf, nextRank, rankOf, resolveExercises, scoreWeek } from "./rules";
+import { levelOf, nextRank, rankOf, resolveExercises, scoreWeek, weekEffect, xpByGroup } from "./rules";
 import type { Entry } from "./types";
 
 const ex = resolveExercises([{ id: "c_rad", name: "Radfahren", cat: "cardio", custom: true }]);
@@ -58,5 +58,18 @@ describe("Datum", () => {
   it("Woche beginnt am Montag", () => {
     const d = weekDates(new Date(2026, 9, 25));
     expect([ymd(d[0]), ymd(d[6])]).toEqual(["2026-10-19", "2026-10-25"]);
+  });
+});
+
+describe("Auswertungen", () => {
+  it("XP nach Art inkl. Tage-Bonus ergeben die Wochensumme", () => {
+    const entries = [e("fussball", "2026-10-26", 90), e("liegestuetz", "2026-10-26", 50), e("klimmzuege", "2026-10-27", 5), e("plank", "2026-10-27", 60)];
+    const g = xpByGroup(entries, ex);
+    expect(g).toEqual({ ausdauer: 35, kraft: 15, rumpf: 6, bonus: 10 });
+    expect(Object.values(g).reduce((a, b) => a + b)).toBe(scoreWeek(entries, ex).total);
+  });
+  it("Wirkung: Wiederholungen zählen einmal pro Tag und Übung", () => {
+    const fx = weekEffect([e("liegestuetz", "2026-10-26", 10), e("liegestuetz", "2026-10-26", 10), e("fussball", "2026-10-27", 60)], ex);
+    expect(fx).toEqual([33, 33, 42, 42]);
   });
 });
