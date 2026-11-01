@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Avatar } from "../components/Avatar";
+import { CharacterArt } from "../components/CharacterArt";
 import { HAIRS, saveLook, SKINS } from "../lib/db";
 import { FORMS, stageOf, XP_PER_LEVEL } from "../lib/rules";
 import type { Beard, Look } from "../lib/types";
@@ -39,7 +39,7 @@ export function CharacterScreen({ liga }: { liga: Liga }) {
           )}
         </header>
         <div className="hero-art">
-          <Avatar level={shown} look={look} />
+          <CharacterArt level={shown} look={look} />
         </div>
         <p className="pill light-pill">
           {nextForm ? (
@@ -63,7 +63,7 @@ export function CharacterScreen({ liga }: { liga: Liga }) {
             return (
               <button key={f.lv} type="button" role="radio" aria-checked={sel} className={"form-card" + (locked ? " locked" : "") + (sel ? " sel" : "")} onClick={() => setPreview(previewLevel(i, level))}>
                 <span className="form-art">
-                  <Avatar level={f.lv} look={look} bust />
+                  <CharacterArt level={f.lv} look={look} bust />
                 </span>
                 <span className="form-num num">{String(i + 1).padStart(2, "0")}</span>
                 <b>{f.name}</b>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Avatar } from "./components/Avatar";
+import { CharacterArt } from "./components/CharacterArt";
 import { Icon, type IconName } from "./components/Icons";
 import { useLiga } from "./lib/useLiga";
 import { weekView } from "./lib/week";
@@ -42,7 +42,9 @@ export default function App() {
             <img className="logo" src="/icon.svg" alt="" />
             <h1>Wochen-Liga</h1>
             <button type="button" className="me" aria-label={`Charakter, Level ${liga.level}`} onClick={() => setTab("character")}>
-              <Avatar level={liga.level} look={liga.look} bust />
+              <span className="me-art">
+                <CharacterArt level={liga.level} look={liga.look} bust />
+              </span>
               <span className="me-badge num">{liga.level}</span>
             </button>
           </div>

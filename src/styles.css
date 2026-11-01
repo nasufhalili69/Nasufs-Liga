@@ -63,7 +63,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
   position: relative; width: 46px; height: 46px; border-radius: 50%; padding: 0; border: 0;
   background: var(--peach); overflow: visible;
 }
-.me svg { width: 46px; height: 46px; border-radius: 50%; display: block; }
+.me svg { width: 46px; height: 46px; display: block; }
 .me-badge {
   position: absolute; top: -4px; left: -6px; min-width: 20px; height: 20px; padding: 0 5px;
   border-radius: 10px; background: #f0563e; color: #fff; font-size: 11px; font-weight: 600;
@@ -214,6 +214,10 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
   box-shadow: 0 10px 30px rgba(80, 40, 10, .25);
 }
 .hero-art svg { width: 100%; height: 100%; display: block; }
+/* Illustrationen: im Porträt-Ausschnitt nur Kopf und Schultern */
+.char-img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: 50% 0; }
+.char-img.bust { transform: scale(1.9); transform-origin: 50% 8%; }
+.me-art { display: block; width: 46px; height: 46px; border-radius: 50%; overflow: hidden; }
 .row-title { display: flex; justify-content: space-between; align-items: baseline; font-size: 18px; font-weight: 500; margin: 6px 4px 10px; }
 .row-title span { font-size: 13px; color: var(--muted); font-weight: 400; }
 .forms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
