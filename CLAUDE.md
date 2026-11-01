@@ -48,19 +48,20 @@ Wiederholungs-Übungen werden pro Tag und Übung zusammengezählt, dann gilt das
 
 Der Charakter ist der Nutzer selbst. Anpassbar: Hautton, Haarfarbe, Bart (keiner, Dreitage, Vollbart).
 
-| Form | ab Level | Bedeutung | Look |
+| Form (Rang) | ab Level | Bedeutung | Look |
 |---|---|---|---|
-| Minarai | 1 | Lehrling | schmal, graues T-Shirt |
-| Senshi | 3 | Krieger | etwas breiter, Stirnband, Armbänder |
-| Bushi | 6 | Kämpfer | athletisch, ärmelloser Gi, Gürtel, leichte türkise Aura |
-| Shihan | 10 | Meister | V-Form, sichtbare Bauchmuskeln, offener Mantel, orange Aura |
-| Kensei | 15 | Schwertheiliger | sehr breit, leuchtende Augen, Markierungen an den Armen, rote Aura |
-| Haō | 20 | Oberherr | Umhang, goldene Aura |
+| Akademie (見習) | 1 | Schüler | schmal, grauer Kimono |
+| Genin (下忍) | 3 | Ninja | indigo Kimono, Stirnband mit Lotus-Platte, Armbänder, roter Obi |
+| Chūnin (中忍) | 6 | Truppführer | ärmellos, tiefer V-Ausschnitt, Muskel-Linien, türkise Aura |
+| Jōnin (上忍) | 10 | Elite-Ninja | offener Mantel, sichtbare Bauchmuskeln, Haarzopf, orange Aura |
+| ANBU (暗部) | 15 | Spezialeinheit | sehr breit, leuchtende Augen, rote Arm-Markierungen, Schulterschutz, rote Aura |
+| Hokage (火影) | 20 | Dorfoberhaupt | roter Umhang mit Wolken, goldene Aura |
 
 Schulterbreite und Armdicke wachsen zusätzlich mit jedem Level stufenlos.
 
 - „Zukunft ansehen“: Regler, um jede Form vorab anzusehen.
-- **Grafik:** Im Prototyp aus SVG-Formen gezeichnet. Für die App eigene, gezeichnete Illustrationen pro Form verwenden (Illustrator oder Bildgenerator). Wichtig: Der Charakter muss eigenständig sein. Keine Figuren, Namen, Ränge oder Designs aus Naruto, Bleach, Jujutsu Kaisen oder anderen Serien übernehmen.
+- **Grafik:** Holzschnitt-Stil (Ukiyo-e) aus SVG-Formen: dicke Tusche-Konturen, Papiergrund, Wirbelwolken, Namensschild mit Rang-Kanji und roter Stempel. Später optional durch gezeichnete Illustrationen pro Form ersetzen.
+- **Rang-Namen:** Auf Wunsch des Nutzers nach dem Ninja-Rangsystem (Genin, Chūnin, Jōnin, ANBU, Hokage). Figuren-Designs, Symbole und Kleidung bleiben eigenständig: keine Figuren, Dorf-Symbole, Masken oder Outfits aus Naruto, Demon Slayer oder anderen Serien übernehmen (das Stirnband trägt eine eigene Lotus-Platte).
 
 ## Screens
 

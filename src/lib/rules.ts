@@ -118,14 +118,14 @@ export function nextRank(xp: number): { rank: string; missing: number } | null {
 
 export const levelOf = (totalXp: number) => Math.floor(totalXp / XP_PER_LEVEL) + 1;
 
-/* Charakter-Formen */
+/* Charakter-Formen (Ränge) */
 export const FORMS = [
-  { lv: 1, name: "Minarai", de: "Lehrling" },
-  { lv: 3, name: "Senshi", de: "Krieger" },
-  { lv: 6, name: "Bushi", de: "Kämpfer" },
-  { lv: 10, name: "Shihan", de: "Meister" },
-  { lv: 15, name: "Kensei", de: "Schwertheiliger" },
-  { lv: 20, name: "Haō", de: "Oberherr" },
+  { lv: 1, name: "Akademie", de: "Schüler", kanji: "見習" },
+  { lv: 3, name: "Genin", de: "Ninja", kanji: "下忍" },
+  { lv: 6, name: "Chūnin", de: "Truppführer", kanji: "中忍" },
+  { lv: 10, name: "Jōnin", de: "Elite-Ninja", kanji: "上忍" },
+  { lv: 15, name: "ANBU", de: "Spezialeinheit", kanji: "暗部" },
+  { lv: 20, name: "Hokage", de: "Dorfoberhaupt", kanji: "火影" },
 ];
 
 export const stageOf = (level: number) => FORMS.reduce((s, f, i) => (level >= f.lv ? i : s), 0);
